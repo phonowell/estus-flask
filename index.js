@@ -1,20 +1,15 @@
 (function() {
   var $, Logger, _, axios, i, key, kleur, len, listKey, logger, qs;
 
-  $ = {};
+  module.exports = $ = {};
 
-  _ = require('lodash');
-
-  $._ = _;
+  $._ = _ = require('lodash');
 
   axios = require('axios');
 
   kleur = require('kleur');
 
   qs = require('qs');
-
-  // return
-  module.exports = $;
 
   /*
   delay_([time])
