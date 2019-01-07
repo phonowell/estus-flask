@@ -4,4 +4,4 @@ $ = require 'fire-keeper'
 # return
 module.exports = ->
   
-  $.info 'z'
+  $.i await $.post_ 'https://app.anitama.net/web'

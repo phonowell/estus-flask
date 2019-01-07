@@ -1,20 +1,16 @@
 (function() {
-  var $, Logger, _, axios, i, key, kleur, len, listKey, logger, qs;
+  var $, Logger, _, i, key, kleur, len, listKey, logger;
 
   module.exports = $ = {};
 
   $._ = _ = require('lodash');
 
-  axios = require('axios');
-
   kleur = require('kleur');
-
-  qs = require('qs');
 
   /*
   delay_([time])
-  get_(url, [data])
-  post_(url, [data])
+  get_(url, [data], [option])
+  post_(url, [data], [option])
   */
   $.delay_ = async function(time = 0) {
     await new Promise(function(resolve) {
@@ -26,17 +22,24 @@
     return $; // return
   };
 
-  $.get_ = async function(url, data) {
-    var res;
-    res = (await axios.get(url, {
-      params: data || {}
-    }));
+  $.get_ = async function(url, data = {}, option = {}) {
+    var axios, res;
+    axios = require('axios');
+    option.method = 'get';
+    option.params = data;
+    option.url = url;
+    res = (await axios(option));
     return res.data; // return
   };
 
-  $.post_ = async function(url, data) {
-    var res;
-    res = (await axios.post(url, qs.stringify(data)));
+  $.post_ = async function(url, data = {}, option = {}) {
+    var axios, qs, res;
+    axios = require('axios');
+    qs = require('qs');
+    option.data = qs.stringify(data);
+    option.method = 'post';
+    option.url = url;
+    res = (await axios(option));
     return res.data; // return
   };
 

@@ -1,0 +1,37 @@
+{
+  "name": "estus-flask",
+  "version": "0.0.2",
+  "description": "Estus flask.",
+  "main": "./index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phonowell/estus-flask.git"
+  },
+  "keywords": [
+    "node-jquery-lite",
+    "estus-flask",
+    "nodejs",
+    "jquery",
+    "lite",
+    "coffeescript"
+  ],
+  "author": "Mimiko Phonowell <phonowell@gmail.com>",
+  "license": "MIT",
+  "url": "https://github.com/phonowell/estus-flask",
+  "bugs": {
+    "url": "https://github.com/phonowell/estus-flask/issues"
+  },
+  "homepage": "https://github.com/phonowell/estus-flask",
+  "devDependencies": {
+    "fire-keeper": "0.0.124",
+    "mocha": "^5.2.0"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "kleur": "^3.0.1",
+    "lodash": "^4.17.11"
+  }
+}
