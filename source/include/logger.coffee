@@ -1,31 +1,29 @@
 class Logger
 
   ###
-  __cache_separator__
-  __cache_time__
-  __cache_type__
-  __reg_base__
-  __reg_home__
-  ###
-
-  __cache_separator__: null
-  __cache_time__: []
-  __cache_type__: {}
-  __reg_base__: new RegExp process.cwd(), 'g'
-  __reg_home__: new RegExp (require 'os').homedir(), 'g'
-
-  ###
+  __cache-muted__
+  __cache-separator__
+  __cache-time__
+  __cache-type__
+  __reg-base__
+  __reg-home__
   execute(arg...)
   getStringTime()
   pause(key)
   render(type, string)
   renderContent(string)
   renderPath(string)
-  renderSeparator()
   renderTime()
   renderType(type)
   resume(key)
   ###
+
+  '__cache-muted__': []
+  '__cache-separator__': "#{kleur.gray '›'} "
+  '__cache-time__': []
+  '__cache-type__': {}
+  '__reg-base__': new RegExp process.cwd(), 'g'
+  '__reg-home__': new RegExp (require 'os').homedir(), 'g'
 
   execute: (arg...) ->
 
@@ -34,10 +32,12 @@ class Logger
       when 2 then arg
       else throw new Error 'invalid argument length'
 
-    if @['__token_muted__'] then return text
+    if @['__cache-muted__'].length
+      return text
 
     message = _.trim $.parseString text
-    if !message.length then return text
+    unless message.length
+      return text
 
     console.log @render type, message
 
@@ -57,16 +57,23 @@ class Logger
 
   pause: (key) ->
 
-    stringToken = '__token_muted__'
+    unless key
+      throw new Error "invalid key '#{key}'"
 
-    if @[stringToken] then return
-    @[stringToken] = key
+    list = @['__cache-muted__']
+
+    if key in list
+      return @
+
+    list.push key
+    
+    @ # return
 
   render: (type, string) ->
 
     [
       @renderTime()
-      @renderSeparator()
+      @['__cache-separator__']
       @renderType type
       @renderContent string
     ].join ''
@@ -78,34 +85,25 @@ class Logger
     # 'xxx'
     .replace /'.*?'/g, (text) ->
       cont = text.replace /'/g, ''
-      if cont.length
-        kleur.magenta cont
-      else "''"
+      unless cont.length
+        return "''"
+      kleur.magenta cont
     
     message # return
 
   renderPath: (string) ->
   
     string
-    .replace @['__reg_base__'], '.'
-    .replace @['__reg_home__'], '~'
-
-  renderSeparator: ->
-    
-    cache = @['__cache_separator__']
-    if cache then return cache
-
-    stringSeparator = kleur.gray '›'
-
-    # return
-    @['__cache_separator__'] = "#{stringSeparator} "
+    .replace @['__reg-base__'], '.'
+    .replace @['__reg-home__'], '~'
 
   renderTime: ->
 
-    cache = @['__cache_time__']
+    cache = @['__cache-time__']
     ts = _.floor _.now(), -3
 
-    if ts == cache[0] then return cache[1]
+    if ts == cache[0]
+      return cache[1]
     cache[0] = ts
 
     stringTime = kleur.gray "[#{@getStringTime()}]"
@@ -115,29 +113,29 @@ class Logger
 
   renderType: (type) ->
 
-    cache = @['__cache_type__']
     type = _.trim $.parseString type
-    type = type.toLowerCase type
+    .toLowerCase()
 
-    if cache[type] then return cache[type]
+    @['__cache-type__'][type] or= do ->
 
-    if type == 'default'
-      return cache[type] = ''
+      if type == 'default'
+        return ''
 
-    stringContent = kleur.cyan().underline type
-    stringPad = _.repeat ' ', 10 - type.length
-    
-    # return
-    cache[type] = "#{stringContent}#{stringPad} "
+      stringContent = kleur.cyan().underline type
+      stringPad = _.repeat ' ', 10 - type.length
+
+      "#{stringContent}#{stringPad} " # return
 
   resume: (key) ->
 
-    stringToken = '__token_muted__'
+    list = @['__cache-muted__']
 
-    if !@[stringToken] then return
-    if key != @[stringToken] then return
-    
-    @[stringToken] = null
+    unless key in list
+      throw new Error "invalid key '#{key}'"
+
+    _.remove list, (_key) -> _key == key
+
+    @ # return
 
 # return
 

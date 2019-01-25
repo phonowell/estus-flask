@@ -3,5 +3,16 @@ $ = require 'fire-keeper'
 
 # return
 module.exports = ->
+
+  {info} = require '../index'
   
-  $.i await $.post_ 'https://app.anitama.net/web'
+  info
+  .pause 'a'
+  .pause 'b'
+  .pause 'c'
+
+  .resume 'a'
+  .resume 'b'
+  .resume 'd'
+  
+  info 'debug', '123'

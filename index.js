@@ -1,5 +1,6 @@
 (function() {
-  var $, Logger, _, i, key, kleur, len, listKey, logger;
+  var $, Logger, _, i, key, kleur, len, listKey, logger,
+    indexOf = [].indexOf;
 
   module.exports = $ = {};
 
@@ -137,18 +138,6 @@
 
   Logger = (function() {
     class Logger {
-      /*
-      execute(arg...)
-      getStringTime()
-      pause(key)
-      render(type, string)
-      renderContent(string)
-      renderPath(string)
-      renderSeparator()
-      renderTime()
-      renderType(type)
-      resume(key)
-      */
       execute(...arg) {
         var message, text, type;
         [type, text] = (function() {
@@ -161,7 +150,7 @@
               throw new Error('invalid argument length');
           }
         })();
-        if (this['__token_muted__']) {
+        if (this['__cache-muted__'].length) {
           return text;
         }
         message = _.trim($.parseString(text));
@@ -189,16 +178,20 @@
       }
 
       pause(key) {
-        var stringToken;
-        stringToken = '__token_muted__';
-        if (this[stringToken]) {
-          return;
+        var list;
+        if (!key) {
+          throw new Error(`invalid key '${key}'`);
         }
-        return this[stringToken] = key;
+        list = this['__cache-muted__'];
+        if (indexOf.call(list, key) >= 0) {
+          return this;
+        }
+        list.push(key);
+        return this;
       }
 
       render(type, string) {
-        return [this.renderTime(), this.renderSeparator(), this.renderType(type), this.renderContent(string)].join('');
+        return [this.renderTime(), this['__cache-separator__'], this.renderType(type), this.renderContent(string)].join('');
       }
 
       renderContent(string) {
@@ -207,33 +200,21 @@
         message = this.renderPath(string).replace(/'.*?'/g, function(text) {
           var cont;
           cont = text.replace(/'/g, '');
-          if (cont.length) {
-            return kleur.magenta(cont);
-          } else {
+          if (!cont.length) {
             return "''";
           }
+          return kleur.magenta(cont);
         });
         return message; // return
       }
 
       renderPath(string) {
-        return string.replace(this['__reg_base__'], '.').replace(this['__reg_home__'], '~');
-      }
-
-      renderSeparator() {
-        var cache, stringSeparator;
-        cache = this['__cache_separator__'];
-        if (cache) {
-          return cache;
-        }
-        stringSeparator = kleur.gray('›');
-        // return
-        return this['__cache_separator__'] = `${stringSeparator} `;
+        return string.replace(this['__reg-base__'], '.').replace(this['__reg-home__'], '~');
       }
 
       renderTime() {
         var cache, stringTime, ts;
-        cache = this['__cache_time__'];
+        cache = this['__cache-time__'];
         ts = _.floor(_.now(), -3);
         if (ts === cache[0]) {
           return cache[1];
@@ -245,58 +226,69 @@
       }
 
       renderType(type) {
-        var cache, stringContent, stringPad;
-        cache = this['__cache_type__'];
-        type = _.trim($.parseString(type));
-        type = type.toLowerCase(type);
-        if (cache[type]) {
-          return cache[type];
-        }
-        if (type === 'default') {
-          return cache[type] = '';
-        }
-        stringContent = kleur.cyan().underline(type);
-        stringPad = _.repeat(' ', 10 - type.length);
-        
-        // return
-        return cache[type] = `${stringContent}${stringPad} `;
+        var base;
+        type = _.trim($.parseString(type)).toLowerCase();
+        return (base = this['__cache-type__'])[type] || (base[type] = (function() {
+          var stringContent, stringPad;
+          if (type === 'default') {
+            return '';
+          }
+          stringContent = kleur.cyan().underline(type);
+          stringPad = _.repeat(' ', 10 - type.length);
+          return `${stringContent}${stringPad
+      // return
+} `;
+        })());
       }
 
       resume(key) {
-        var stringToken;
-        stringToken = '__token_muted__';
-        if (!this[stringToken]) {
-          return;
+        var list;
+        list = this['__cache-muted__'];
+        if (indexOf.call(list, key) < 0) {
+          throw new Error(`invalid key '${key}'`);
         }
-        if (key !== this[stringToken]) {
-          return;
-        }
-        return this[stringToken] = null;
+        _.remove(list, function(_key) {
+          return _key === key;
+        });
+        return this;
       }
 
     };
 
     /*
-    __cache_separator__
-    __cache_time__
-    __cache_type__
-    __reg_base__
-    __reg_home__
+    __cache-muted__
+    __cache-separator__
+    __cache-time__
+    __cache-type__
+    __reg-base__
+    __reg-home__
+    execute(arg...)
+    getStringTime()
+    pause(key)
+    render(type, string)
+    renderContent(string)
+    renderPath(string)
+    renderTime()
+    renderType(type)
+    resume(key)
     */
-    Logger.prototype.__cache_separator__ = null;
+    Logger.prototype['__cache-muted__'] = [];
 
-    Logger.prototype.__cache_time__ = [];
+    Logger.prototype['__cache-separator__'] = `${kleur.gray('›')} `;
 
-    Logger.prototype.__cache_type__ = {};
+    Logger.prototype['__cache-time__'] = [];
 
-    Logger.prototype.__reg_base__ = new RegExp(process.cwd(), 'g');
+    Logger.prototype['__cache-type__'] = {};
 
-    Logger.prototype.__reg_home__ = new RegExp((require('os')).homedir(), 'g');
+    Logger.prototype['__reg-base__'] = new RegExp(process.cwd(), 'g');
+
+    Logger.prototype['__reg-home__'] = new RegExp((require('os')).homedir(), 'g');
 
     return Logger;
 
   }).call(this);
 
+  
   // return
   /*
   $.i(msg)
