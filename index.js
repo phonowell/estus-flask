@@ -1,5 +1,5 @@
 (function() {
-  var $, Logger, _, i, key, kleur, len, listKey, logger,
+  var $, Logger, _, i, key, kleur, len, listKey,
     indexOf = [].indexOf;
 
   module.exports = $ = {};
@@ -150,7 +150,7 @@
               throw new Error('invalid argument length');
           }
         })();
-        if (this['__cache-muted__'].length) {
+        if (this['@cache-muted'].length) {
           return text;
         }
         message = _.trim($.parseString(text));
@@ -182,7 +182,7 @@
         if (!key) {
           throw new Error(`invalid key '${key}'`);
         }
-        list = this['__cache-muted__'];
+        list = this['@cache-muted'];
         if (indexOf.call(list, key) >= 0) {
           return this;
         }
@@ -191,7 +191,7 @@
       }
 
       render(type, string) {
-        return [this.renderTime(), this['__cache-separator__'], this.renderType(type), this.renderContent(string)].join('');
+        return [this.renderTime(), this['@cache-separator'], this.renderType(type), this.renderContent(string)].join('');
       }
 
       renderContent(string) {
@@ -209,12 +209,12 @@
       }
 
       renderPath(string) {
-        return string.replace(this['__reg-base__'], '.').replace(this['__reg-home__'], '~');
+        return string.replace(this['@reg-base'], '.').replace(this['@reg-home'], '~');
       }
 
       renderTime() {
         var cache, stringTime, ts;
-        cache = this['__cache-time__'];
+        cache = this['@cache-time'];
         ts = _.floor(_.now(), -3);
         if (ts === cache[0]) {
           return cache[1];
@@ -228,7 +228,7 @@
       renderType(type) {
         var base;
         type = _.trim($.parseString(type)).toLowerCase();
-        return (base = this['__cache-type__'])[type] || (base[type] = (function() {
+        return (base = this['@cache-type'])[type] || (base[type] = (function() {
           var stringContent, stringPad;
           if (type === 'default') {
             return '';
@@ -243,7 +243,7 @@
 
       resume(key) {
         var list;
-        list = this['__cache-muted__'];
+        list = this['@cache-muted'];
         if (indexOf.call(list, key) < 0) {
           throw new Error(`invalid key '${key}'`);
         }
@@ -256,12 +256,12 @@
     };
 
     /*
-    __cache-muted__
-    __cache-separator__
-    __cache-time__
-    __cache-type__
-    __reg-base__
-    __reg-home__
+    @cache-muted
+    @cache-separator
+    @cache-time
+    @cache-type
+    @reg-base
+    @reg-home
     execute(arg...)
     getStringTime()
     pause(key)
@@ -272,17 +272,17 @@
     renderType(type)
     resume(key)
     */
-    Logger.prototype['__cache-muted__'] = [];
+    Logger.prototype['@cache-muted'] = [];
 
-    Logger.prototype['__cache-separator__'] = `${kleur.gray('›')} `;
+    Logger.prototype['@cache-separator'] = `${kleur.gray('›')} `;
 
-    Logger.prototype['__cache-time__'] = [];
+    Logger.prototype['@cache-time'] = [];
 
-    Logger.prototype['__cache-type__'] = {};
+    Logger.prototype['@cache-type'] = {};
 
-    Logger.prototype['__reg-base__'] = new RegExp(process.cwd(), 'g');
+    Logger.prototype['@reg-base'] = new RegExp(process.cwd(), 'g');
 
-    Logger.prototype['__reg-home__'] = new RegExp((require('os')).homedir(), 'g');
+    Logger.prototype['@reg-home'] = new RegExp((require('os')).homedir(), 'g');
 
     return Logger;
 
@@ -301,22 +301,22 @@
   };
 
   // $.info()
-  logger = new Logger();
-
   $.info = function(...arg) {
-    return logger.execute(...arg);
+    return $.info.logger.execute(...arg);
   };
 
+  $.info.logger = new Logger();
+
   $.info.pause = function(...arg) {
-    return logger.pause(...arg);
+    return $.info.logger.pause(...arg);
   };
 
   $.info.renderPath = function(...arg) {
-    return logger.renderPath(...arg);
+    return $.info.logger.renderPath(...arg);
   };
 
   $.info.resume = function(...arg) {
-    return logger.resume(...arg);
+    return $.info.logger.resume(...arg);
   };
 
   $.log = console.log;

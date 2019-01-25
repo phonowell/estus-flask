@@ -1,12 +1,12 @@
 class Logger
 
   ###
-  __cache-muted__
-  __cache-separator__
-  __cache-time__
-  __cache-type__
-  __reg-base__
-  __reg-home__
+  @cache-muted
+  @cache-separator
+  @cache-time
+  @cache-type
+  @reg-base
+  @reg-home
   execute(arg...)
   getStringTime()
   pause(key)
@@ -18,12 +18,12 @@ class Logger
   resume(key)
   ###
 
-  '__cache-muted__': []
-  '__cache-separator__': "#{kleur.gray '›'} "
-  '__cache-time__': []
-  '__cache-type__': {}
-  '__reg-base__': new RegExp process.cwd(), 'g'
-  '__reg-home__': new RegExp (require 'os').homedir(), 'g'
+  '@cache-muted': []
+  '@cache-separator': "#{kleur.gray '›'} "
+  '@cache-time': []
+  '@cache-type': {}
+  '@reg-base': new RegExp process.cwd(), 'g'
+  '@reg-home': new RegExp (require 'os').homedir(), 'g'
 
   execute: (arg...) ->
 
@@ -32,7 +32,7 @@ class Logger
       when 2 then arg
       else throw new Error 'invalid argument length'
 
-    if @['__cache-muted__'].length
+    if @['@cache-muted'].length
       return text
 
     message = _.trim $.parseString text
@@ -60,7 +60,7 @@ class Logger
     unless key
       throw new Error "invalid key '#{key}'"
 
-    list = @['__cache-muted__']
+    list = @['@cache-muted']
 
     if key in list
       return @
@@ -73,7 +73,7 @@ class Logger
 
     [
       @renderTime()
-      @['__cache-separator__']
+      @['@cache-separator']
       @renderType type
       @renderContent string
     ].join ''
@@ -94,12 +94,12 @@ class Logger
   renderPath: (string) ->
   
     string
-    .replace @['__reg-base__'], '.'
-    .replace @['__reg-home__'], '~'
+    .replace @['@reg-base'], '.'
+    .replace @['@reg-home'], '~'
 
   renderTime: ->
 
-    cache = @['__cache-time__']
+    cache = @['@cache-time']
     ts = _.floor _.now(), -3
 
     if ts == cache[0]
@@ -116,7 +116,7 @@ class Logger
     type = _.trim $.parseString type
     .toLowerCase()
 
-    @['__cache-type__'][type] or= do ->
+    @['@cache-type'][type] or= do ->
 
       if type == 'default'
         return ''
@@ -128,7 +128,7 @@ class Logger
 
   resume: (key) ->
 
-    list = @['__cache-muted__']
+    list = @['@cache-muted']
 
     unless key in list
       throw new Error "invalid key '#{key}'"
@@ -151,11 +151,10 @@ $.i = (msg) ->
 
 # $.info()
 
-logger = new Logger()
-
-$.info = (arg...) -> logger.execute arg...
-$.info.pause = (arg...) -> logger.pause arg...
-$.info.renderPath = (arg...) -> logger.renderPath arg...
-$.info.resume = (arg...) -> logger.resume arg...
+$.info = (arg...) -> $.info.logger.execute arg...
+$.info.logger = new Logger()
+$.info.pause = (arg...) -> $.info.logger.pause arg...
+$.info.renderPath = (arg...) -> $.info.logger.renderPath arg...
+$.info.resume = (arg...) -> $.info.logger.resume arg...
 
 $.log = console.log

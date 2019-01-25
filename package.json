@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/phonowell/estus-flask",
   "devDependencies": {
-    "fire-keeper": "0.0.132",
+    "fire-keeper": "0.0.133",
     "mocha": "^5.2.0"
   },
   "dependencies": {

@@ -9,10 +9,11 @@ module.exports = ->
   info
   .pause 'a'
   .pause 'b'
-  .pause 'c'
 
-  .resume 'a'
+  info 'debug', '1'
+
+  info
   .resume 'b'
-  .resume 'd'
+  .resume 'a'
   
-  info 'debug', '123'
+  info 'debug', '2'
