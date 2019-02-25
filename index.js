@@ -85,28 +85,28 @@
   timestamp([arg])
   */
   $.serialize = function(string) {
-    var a, b, i, key, len, ref, res, value;
-    switch ($.type(string)) {
-      case 'object':
-        return string;
-      case 'string':
-        if (!~string.search(/=/)) {
-          return {};
-        }
-        res = {};
-        ref = _.trim(string.replace(/\?/g, '')).split('&');
-        for (i = 0, len = ref.length; i < len; i++) {
-          a = ref[i];
-          b = a.split('=');
-          [key, value] = [_.trim(b[0]), _.trim(b[1])];
-          if (key.length) {
-            res[key] = value;
-          }
-        }
-        return res;
-      default:
-        throw new Error('invalid argument type');
+    var a, b, i, key, len, ref, res, type, value;
+    type = $.type(string);
+    if (type !== 'object' && type !== 'string') {
+      throw new Error(`invalid type '${type}'`);
     }
+    if (type === 'object') {
+      return string;
+    }
+    if (!~string.search(/=/)) {
+      return {};
+    }
+    res = {};
+    ref = _.trim(string.replace(/\?/g, '')).split('&');
+    for (i = 0, len = ref.length; i < len; i++) {
+      a = ref[i];
+      b = a.split('=');
+      [key, value] = [_.trim(b[0]), _.trim(b[1])];
+      if (key.length) {
+        res[key] = value;
+      }
+    }
+    return res; // return
   };
 
   $.timestamp = function(arg) {
@@ -179,7 +179,7 @@
 
       pause(key) {
         var list;
-        if (!key) {
+        if (!(key || key === 'all')) {
           throw new Error(`invalid key '${key}'`);
         }
         list = this['@cache-muted'];
@@ -243,6 +243,10 @@
 
       resume(key) {
         var list;
+        if (key === 'all') {
+          this['@cache-muted'] = [];
+          return this;
+        }
         list = this['@cache-muted'];
         if (indexOf.call(list, key) < 0) {
           throw new Error(`invalid key '${key}'`);

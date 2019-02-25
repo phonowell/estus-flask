@@ -4,20 +4,31 @@ timestamp([arg])
 ###
 
 $.serialize = (string) ->
-  switch $.type string
-    when 'object' then string
-    when 'string'
-      if !~string.search /=/ then return {}
-      res = {}
-      for a in _.trim(string.replace /\?/g, '').split '&'
-        b = a.split '='
-        [key, value] = [
-          _.trim b[0]
-          _.trim b[1]
-        ]
-        if key.length then res[key] = value
-      res
-    else throw new Error 'invalid argument type'
+
+  type = $.type string
+
+  unless type in ['object', 'string']
+    throw new Error "invalid type '#{type}'"
+
+  if type == 'object'
+    return string
+
+  # string
+
+  unless ~string.search /=/
+    return {}
+  
+  res = {}
+  for a in _.trim(string.replace /\?/g, '').split '&'
+    b = a.split '='
+    [key, value] = [
+      _.trim b[0]
+      _.trim b[1]
+    ]
+    if key.length
+      res[key] = value
+  
+  res # return
 
 $.timestamp = (arg) ->
 

@@ -29,7 +29,10 @@ $.type = (input) ->
   .replace /^\[object\s(.+)]$/, '$1'
   .toLowerCase()
 
-  if type == 'asyncfunction' then return 'async function'
-  if type == 'uint8array' then return 'buffer'
+  if type == 'asyncfunction'
+    return 'async function'
+  
+  if type == 'uint8array'
+    return 'buffer'
 
   type # return

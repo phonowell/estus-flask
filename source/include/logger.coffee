@@ -57,7 +57,7 @@ class Logger
 
   pause: (key) ->
 
-    unless key
+    unless key or key == 'all'
       throw new Error "invalid key '#{key}'"
 
     list = @['@cache-muted']
@@ -127,6 +127,10 @@ class Logger
       "#{stringContent}#{stringPad} " # return
 
   resume: (key) ->
+
+    if key == 'all'
+      @['@cache-muted'] = []
+      return @
 
     list = @['@cache-muted']
 
