@@ -22,8 +22,8 @@ class Logger
   '@cache-separator': "#{kleur.gray '›'} "
   '@cache-time': []
   '@cache-type': {}
-  '@reg-base': new RegExp process.cwd(), 'g'
-  '@reg-home': new RegExp (require 'os').homedir(), 'g'
+  '@reg-base': new RegExp "^#{process.cwd()}", 'g'
+  '@reg-home': new RegExp "^#{(require 'os').homedir()}", 'g'
 
   execute: (arg...) ->
 
@@ -92,7 +92,7 @@ class Logger
     message # return
 
   renderPath: (string) ->
-  
+
     string
     .replace @['@reg-base'], '.'
     .replace @['@reg-home'], '~'

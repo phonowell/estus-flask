@@ -284,9 +284,9 @@
 
     Logger.prototype['@cache-type'] = {};
 
-    Logger.prototype['@reg-base'] = new RegExp(process.cwd(), 'g');
+    Logger.prototype['@reg-base'] = new RegExp(`^${process.cwd()}`, 'g');
 
-    Logger.prototype['@reg-home'] = new RegExp((require('os')).homedir(), 'g');
+    Logger.prototype['@reg-home'] = new RegExp(`^${(require('os')).homedir()}`, 'g');
 
     return Logger;
 

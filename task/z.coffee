@@ -1,19 +1,12 @@
 $ = require 'fire-keeper'
+$ = require '../index'
 {_} = $
 
 # return
 module.exports = ->
 
-  {info} = require '../index'
-  
-  info
-  .pause 'a'
-  .pause 'b'
+  $.info '/Users/mimiko/downloads'
+  $.info '/Users/mimiko/Project/estus-flask/readme.md'
 
-  info 'debug', '1'
-
-  info
-  .resume 'b'
-  .resume 'a'
-  
-  info 'debug', '2'
+  $.info 'C:/Users/mimiko/downloads'
+  $.info 'C:/Users/mimiko/Project/estus-flask/readme.md'

@@ -1,6 +1,6 @@
 {
   "name": "estus-flask",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Estus flask.",
   "main": "./index.js",
   "scripts": {
@@ -26,12 +26,12 @@
   },
   "homepage": "https://github.com/phonowell/estus-flask",
   "devDependencies": {
-    "fire-keeper": "^0.0.138",
-    "mocha": "^6.0.1"
+    "fire-keeper": "^0.0.147",
+    "mocha": "^6.1.4"
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "kleur": "^3.0.2",
+    "kleur": "^3.0.3",
     "lodash": "^4.17.11"
   }
 }
