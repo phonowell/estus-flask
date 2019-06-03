@@ -5,8 +5,4 @@ $ = require '../index'
 # return
 module.exports = ->
 
-  $.info '/Users/mimiko/downloads'
-  $.info '/Users/mimiko/Project/estus-flask/readme.md'
-
-  $.info 'C:/Users/mimiko/downloads'
-  $.info 'C:/Users/mimiko/Project/estus-flask/readme.md'
+  $.info 'z'

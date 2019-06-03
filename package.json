@@ -1,37 +1,37 @@
 {
-  "name": "estus-flask",
-  "version": "0.0.6",
-  "description": "Estus flask.",
-  "main": "./index.js",
-  "scripts": {
-    "test": "mocha"
+  "author": "Mimiko Phonowell <phonowell@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/phonowell/estus-flask/issues"
   },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "kleur": "^3.0.3",
+    "lodash": "^4.17.11"
+  },
+  "description": "Estus flask.",
+  "devDependencies": {
+    "fire-keeper": "0.0.150",
+    "mocha": "^6.1.4"
+  },
+  "homepage": "https://github.com/phonowell/estus-flask",
+  "keywords": [
+    "coffeescript",
+    "estus-flask",
+    "jquery",
+    "lite",
+    "node-jquery-lite",
+    "nodejs"
+  ],
+  "license": "MIT",
+  "main": "./index.js",
+  "name": "estus-flask",
   "repository": {
     "type": "git",
     "url": "https://github.com/phonowell/estus-flask.git"
   },
-  "keywords": [
-    "node-jquery-lite",
-    "estus-flask",
-    "nodejs",
-    "jquery",
-    "lite",
-    "coffeescript"
-  ],
-  "author": "Mimiko Phonowell <phonowell@gmail.com>",
-  "license": "MIT",
+  "scripts": {
+    "test": "mocha"
+  },
   "url": "https://github.com/phonowell/estus-flask",
-  "bugs": {
-    "url": "https://github.com/phonowell/estus-flask/issues"
-  },
-  "homepage": "https://github.com/phonowell/estus-flask",
-  "devDependencies": {
-    "fire-keeper": "^0.0.147",
-    "mocha": "^6.1.4"
-  },
-  "dependencies": {
-    "axios": "^0.18.0",
-    "kleur": "^3.0.3",
-    "lodash": "^4.17.11"
-  }
+  "version": "0.0.7"
 }
